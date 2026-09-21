@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace RecipeManagement.Core;
 
@@ -11,14 +12,33 @@ namespace RecipeManagement.Core;
 public sealed class RecipeManager : IRecipeManager
 {
     // TODO Part A: add your private collection fields here.
-
+    private Dictionary<int, Recipe> _recipes = new(); 
     public RecipeManager(IEnumerable<Recipe> recipes)
     {
         // TODO Part A: validate recipes and build Dictionary<int, Recipe>.
-        _ = recipes;
+        if (recipes == null)
+        {
+            throw new ArgumentNullException(nameof(recipes));
+        }
+        foreach (Recipe recipe in recipes)
+        {
+            if (recipe.Id <= 0)
+            {
+                throw new ArgumentException();
+            }
+            if (string.IsNullOrWhiteSpace(recipe.Title))
+            {
+                throw new ArgumentException();
+            }
+            if (_recipes.ContainsKey(recipe.Id))
+            {
+                throw new ArgumentException();
+            }
+            _recipes.Add(recipe.Id, recipe);
+        }
     }
 
-    public int RecipeCount => 0;
+    public int RecipeCount => _recipes.Count;
     public int ShoppingItemCount => 0;
     public int CookingPlanCount => 0;
     public int PendingInstructionCount => 0;
@@ -27,8 +47,15 @@ public sealed class RecipeManager : IRecipeManager
     public bool AddRecipe(Recipe recipe) =>
         throw new NotImplementedException("Part A: implement AddRecipe.");
 
-    public Recipe? FindRecipe(int recipeId) =>
-        throw new NotImplementedException("Part A: implement FindRecipe.");
+    public Recipe? FindRecipe(int recipeId)
+    {
+        if (_recipes.TryGetValue(recipeId, out Recipe? recipe))
+        {
+            return recipe;
+        }
+        return null;
+    }
+
 
     public bool RemoveRecipe(int recipeId) =>
         throw new NotImplementedException("Part A: implement RemoveRecipe.");
