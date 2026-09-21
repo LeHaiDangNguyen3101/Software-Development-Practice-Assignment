@@ -13,6 +13,7 @@ public sealed class RecipeManager : IRecipeManager
 {
     // TODO Part A: add your private collection fields here.
     private Dictionary<int, Recipe> _recipes = new(); 
+    private List<string> _shoppingList = new();
     public RecipeManager(IEnumerable<Recipe> recipes)
     {
         // TODO Part A: validate recipes and build Dictionary<int, Recipe>.
@@ -39,13 +40,29 @@ public sealed class RecipeManager : IRecipeManager
     }
 
     public int RecipeCount => _recipes.Count;
-    public int ShoppingItemCount => 0;
+    public int ShoppingItemCount => _shoppingList.Count;
     public int CookingPlanCount => 0;
     public int PendingInstructionCount => 0;
     public int RemovedRecipeCount => 0;
 
-    public bool AddRecipe(Recipe recipe) =>
-        throw new NotImplementedException("Part A: implement AddRecipe.");
+    public bool AddRecipe(Recipe recipe)
+    {
+        if (recipe.Id <= 0)
+        {
+            throw new ArgumentException();
+        }
+        if (string.IsNullOrWhiteSpace(recipe.Title))
+        {
+            throw new ArgumentException();
+        }
+
+        if (_recipes.ContainsKey(recipe.Id))
+        {
+            return false;
+        }
+        _recipes.Add(recipe.Id, recipe);
+        return true;
+    }
 
     public Recipe? FindRecipe(int recipeId)
     {
@@ -57,18 +74,35 @@ public sealed class RecipeManager : IRecipeManager
     }
 
 
-    public bool RemoveRecipe(int recipeId) =>
-        throw new NotImplementedException("Part A: implement RemoveRecipe.");
+    public bool RemoveRecipe(int recipeId)
+    {
+        bool removed = _recipes.Remove(recipeId);
+        return removed;
+    }
 
-    public int AddIngredientsToShoppingList(int recipeId) =>
-        throw new NotImplementedException("Part A: implement AddIngredientsToShoppingList.");
+    public int AddIngredientsToShoppingList(int recipeId)
+    {
+        Recipe? recipe = FindRecipe(recipeId);
+        if (recipe == null)
+        {
+            return 0;
+        }
+        foreach (string ingredient in recipe.Ingredients)
+        {
+            _shoppingList.Add(ingredient);
+        }
+        return recipe.Ingredients.Count;
+    }
 
-    public IReadOnlyList<string> GetShoppingList() =>
-        throw new NotImplementedException("Part A: implement GetShoppingList.");
+    public IReadOnlyList<string> GetShoppingList()
+    {
+       return new List<string>(_shoppingList); 
+    }
 
-    public void ClearShoppingList() =>
-        throw new NotImplementedException("Part A: implement ClearShoppingList.");
-
+    public void ClearShoppingList()
+    {
+        
+    }
     public bool AddRecipeToCookingPlan(int recipeId) =>
         throw new NotImplementedException("Part A: implement AddRecipeToCookingPlan.");
 
