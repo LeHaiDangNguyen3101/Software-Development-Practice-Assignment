@@ -1,11 +1,10 @@
 using System.Collections.Generic;
+using System.Reflection.Metadata;
+using System.Reflection.PortableExecutable;
 using RecipeManagement.Core;
 
 namespace RecipeManagement.Tests;
 
-/// <summary>
-/// Example tests from the assignment specification. Add your own tests as you work.
-/// </summary>
 public sealed class RecipeManagerTests
 {
     [Fact]
@@ -51,7 +50,7 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
-    public void AddRecipe_DuplicatedId_ReturnFalse()
+    public void AddRecipe_DuplicateId_ReturnFalse()
     {
         var manager = CreateManager();
         var recipe = new Recipe
@@ -77,7 +76,7 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
-    public void AddRecipeToCookingPlan_DulicatedId_returnFalse()
+    public void AddRecipeToCookingPlan_DulicateId_ReturnFalse()
     {
         var manager = CreateManager();
         manager.AddRecipeToCookingPlan(10);
@@ -88,7 +87,7 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
-    public void PeekLastRecipe_EmptyHistory_returnNull()
+    public void PeekLastRecipe_EmptyHistory_ReturnNull()
     {
         var manager = CreateManager();
         int? result = manager.PeekLastRemovedRecipe();
@@ -96,7 +95,7 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
-    public void PeekNextInstruction_EmptyQueue_returnNull()
+    public void PeekNextInstruction_EmptyQueue_ReturnNull()
     {
         var manager = CreateManager();
         string? instruction = manager.PeekNextInstruction();
@@ -104,7 +103,7 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
-    public void RemoveRecipe_RecipeInCookingPlan_returnNotNull()
+    public void RemoveRecipe_RecipeInCookingPlan_ReturnNotNull()
     {
         var manager = CreateManager();
         manager.AddRecipeToCookingPlan(10);
@@ -116,7 +115,7 @@ public sealed class RecipeManagerTests
     }
 
     [Fact]
-    public void ClearShoppingList_ListHasItem_return0()
+    public void ClearShoppingList_ListHasItem_Return0()
     {
         var manager = CreateManager();
         manager.AddIngredientsToShoppingList(10);
@@ -151,6 +150,18 @@ public sealed class RecipeManagerTests
         Assert.True(result);
         Assert.Equal(3, manager.RecipeCount);
         Assert.NotNull(manager.FindRecipe(30));
+    }
+
+    [Fact]
+    public void RemoveRecipe_ValidRecipe_ReturnTrue()
+    {
+        var manager = CreateManager();
+        bool removed = manager.RemoveRecipe(20);
+
+        Assert.True(removed);
+        Assert.Equal(1,manager.RecipeCount);
+        Assert.Null(manager.FindRecipe(20));
+
     }
 
     private static RecipeManager CreateManager()

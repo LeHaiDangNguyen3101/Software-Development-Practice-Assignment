@@ -5,14 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace RecipeManagement.Core;
 
-/// <summary>
-/// Implement this class using the five Part A collections as private fields:
-/// Dictionary&lt;int, Recipe&gt;, List&lt;string&gt;, LinkedList&lt;int&gt;,
-/// Stack&lt;int&gt; and Queue&lt;string&gt;.
-/// </summary>
 public sealed class RecipeManager : IRecipeManager
 {
-    // TODO Part A: add your private collection fields here.
     private Dictionary<int, Recipe> _recipes = new(); 
     private List<string> _shoppingList = new();
     private LinkedList<int> _cookingPlan = new();
@@ -20,7 +14,6 @@ public sealed class RecipeManager : IRecipeManager
     private Queue<string> _pendingInstructions = new();
     public RecipeManager(IEnumerable<Recipe> recipes)
     {
-        // TODO Part A: validate recipes and build Dictionary<int, Recipe>.
         if (recipes == null)
         {
             throw new ArgumentNullException(nameof(recipes));
