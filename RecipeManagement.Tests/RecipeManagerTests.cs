@@ -163,6 +163,45 @@ public sealed class RecipeManagerTests
         Assert.Null(manager.FindRecipe(20));
 
     }
+    [Fact]
+    public void SearchByTitle_MatchingName_ReturnsResult()
+    {
+        // Arrange
+        RecipeManager manager = CreateManager();
+
+        // Act
+        var results = manager.SearchByTitle("Recipe");
+
+        // Assert
+        Assert.Equal(2, results.Count);
+    }
+
+    [Fact]
+    public void SearchByTitle_LowercaseSearch_ReturnsMatches()
+    {
+        // Arrange
+        RecipeManager manager = CreateManager();
+
+        // Act
+        var results = manager.SearchByTitle("recipe");
+
+        // Assert
+        Assert.Equal(2, results.Count);
+    }
+
+        [Fact]
+    public void SearchByTitle_NoMatchingRecipes_ReturnsEmptyList()
+    {
+        // Arrange
+        RecipeManager manager = CreateManager();
+
+        // Act
+        var results = manager.SearchByTitle("pizza");
+
+        // Assert
+        Assert.Empty(results);;
+    }
+
 
     private static RecipeManager CreateManager()
     {

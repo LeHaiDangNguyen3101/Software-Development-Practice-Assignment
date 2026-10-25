@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace RecipeManagement.Core;
 
@@ -206,8 +207,13 @@ public sealed class RecipeManager : IRecipeManager
         string nextInstruction = _pendingInstructions.Dequeue();
         return nextInstruction;
     }
-    public IReadOnlyList<Recipe> SearchByTitle(string searchText) =>
-        throw new NotImplementedException("Part B: implement SearchByTitle.");
+    public IReadOnlyList<Recipe> SearchByTitle(string searchText)
+    {
+        var results = _recipes.Values
+            .Where(recipe => recipe.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        return results;
+    }
 
     public IReadOnlyList<Recipe> SearchByIngredient(string searchText) =>
         throw new NotImplementedException("Part B: implement SearchByIngredient.");
