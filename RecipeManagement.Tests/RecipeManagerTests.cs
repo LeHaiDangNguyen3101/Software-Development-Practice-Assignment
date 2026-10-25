@@ -361,6 +361,63 @@ public sealed class RecipeManagerTests
         Assert.Empty(results);
     }
 
+    [Fact]
+    public void AddSavedRecipe_ExistingRecipe_ReturnsTrue()
+    {
+        // Arrange
+        RecipeManager manager = CreateManager();
+
+        // Act
+        bool results = manager.AddSavedRecipe(10);
+        // Assert
+        Assert.True(results);
+    }
+
+    [Fact]
+    public void AddSavedRecipe_DuplicateRecipe_ReturnsFalse()
+    {
+        // Arrange
+        RecipeManager manager = CreateManager();
+
+        // Act
+        bool results = manager.AddSavedRecipe(10);
+        bool result = manager.AddSavedRecipe(10);
+        // Assert
+        Assert.True(results);
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void AddSavedRecipe_NonexistentRecipe_ReturnsFalse()
+    {
+        // Arrange
+        RecipeManager manager = CreateManager();
+
+        // Act
+        bool results = manager.AddSavedRecipe(99);
+        // Assert
+        Assert.False(results);
+    }
+    
+    [Fact]
+    public void RemoveSavedRecipe_ExistingSavedRecipe_ReturnsTrue()
+    {
+        RecipeManager manager = CreateManager();
+        bool results = manager.AddSavedRecipe(10);
+        bool result = manager.RemoveSavedRecipe(10);
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void RemoveSavedRecipe_RemoveTwice_ReturnsFalse()
+    {
+        RecipeManager manager = CreateManager();
+        bool added = manager.AddSavedRecipe(10);
+        bool result = manager.RemoveSavedRecipe(10);
+        bool results = manager.RemoveSavedRecipe(10);
+        Assert.True(result);
+        Assert.False(results);
+    }
 
     private static RecipeManager CreateManager()
     {
