@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
+using System.Security.AccessControl;
 using RecipeManagement.Core;
 
 namespace RecipeManagement.Tests;
@@ -418,6 +419,54 @@ public sealed class RecipeManagerTests
         Assert.True(result);
         Assert.False(results);
     }
+
+    [Fact]
+    public void IsRecipeSaved_SavedRecipe_ReturnsTrue()
+    {
+        RecipeManager manager = CreateManager();
+        bool added = manager.AddSavedRecipe(10);
+        bool result = manager.IsRecipeSaved(10);
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsRecipeSaved_NotSaved_ReturnsFalse()
+    {
+        RecipeManager manager = CreateManager();
+        bool result = manager.IsRecipeSaved(10);
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsRecipeSaved_AfterRemoval_ReturnsFalse()
+    {
+        RecipeManager manager = CreateManager();
+        bool added = manager.AddSavedRecipe(10);
+        bool removed = manager.RemoveSavedRecipe(10);
+        bool result = manager.IsRecipeSaved(10);
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void GetSavedRecipes_TwoSavedRecipes_ReturnsBothIds()
+    {
+        RecipeManager manager = CreateManager();
+        bool added = manager.AddSavedRecipe(10);
+        bool added2 = manager.AddSavedRecipe(20);
+        var result = manager.GetSavedRecipes();
+        Assert.Equal(2, result.Count);
+        Assert.Contains(10, result);
+        Assert.Contains(20, result);
+    }
+
+    [Fact]
+    public void GetSavedRecipes_NoSavedRecipes_ReturnsEmptyList()
+    {
+        RecipeManager manager = CreateManager();
+        var result = manager.GetSavedRecipes();
+        Assert.Empty(result);
+    }
+
 
     private static RecipeManager CreateManager()
     {
