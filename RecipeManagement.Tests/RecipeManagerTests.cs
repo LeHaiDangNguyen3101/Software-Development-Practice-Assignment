@@ -166,42 +166,50 @@ public sealed class RecipeManagerTests
     [Fact]
     public void SearchByTitle_MatchingName_ReturnsResult()
     {
-        // Arrange
         RecipeManager manager = CreateManager();
-
-        // Act
         var results = manager.SearchByTitle("Recipe");
-
-        // Assert
         Assert.Equal(2, results.Count);
     }
 
     [Fact]
     public void SearchByTitle_LowercaseSearch_ReturnsMatches()
     {
-        // Arrange
         RecipeManager manager = CreateManager();
-
-        // Act
         var results = manager.SearchByTitle("recipe");
-
-        // Assert
         Assert.Equal(2, results.Count);
     }
 
         [Fact]
     public void SearchByTitle_NoMatchingRecipes_ReturnsEmptyList()
     {
-        // Arrange
         RecipeManager manager = CreateManager();
-
-        // Act
         var results = manager.SearchByTitle("pizza");
-
-        // Assert
         Assert.Empty(results);;
     }
 
+    [Fact]
+    public void SearchByIngredient_MatchingIngredient_ReturnsResult()
+    {
+        RecipeManager manager = CreateManager();
+        var results = manager.SearchByIngredient("apple");
+        Assert.Single(results);
+    }
+
+    [Fact]
+    public void SearchByIngredient_UppercaseSearch_ReturnsResult()
+    {
+        RecipeManager manager = CreateManager();
+        var results = manager.SearchByIngredient("APPLE");
+        Assert.Single(results);
+    }
+
+    [Fact]
+    public void SearchByIngredient_NoMatchingIngredient_ReturnsEmptyList()
+    {
+        RecipeManager manager = CreateManager();
+        var results = manager.SearchByIngredient("banana");
+        Assert.Empty(results);;
+    }
 
     private static RecipeManager CreateManager()
     {
