@@ -211,6 +211,157 @@ public sealed class RecipeManagerTests
         Assert.Empty(results);;
     }
 
+    [Fact]
+    public void GetHighestProteinRecipes_TopTwo_ReturnsDescendingOrder()
+    {
+        // Arrange
+        RecipeManager manager = new RecipeManager(new[]
+        {
+            new Recipe
+            {
+                Id = 1,
+                Title = "Recipe A",
+                Nutrition = new NutritionInfo
+                {
+                    ProteinG = 15
+                }
+            },
+
+            new Recipe
+            {
+                Id = 2,
+                Title = "Recipe B",
+                Nutrition = new NutritionInfo
+                {
+                    ProteinG = 30
+                }
+            },
+
+            new Recipe
+            {
+                Id = 3,
+                Title = "Recipe C",
+                Nutrition = new NutritionInfo
+                {
+                    ProteinG = 10
+                }
+            }
+
+        });
+
+        // Act
+        var results = manager.GetHighestProteinRecipes(2);
+
+        // Assert
+        Assert.Equal(2, results.Count);
+        Assert.Equal(2, results[0].Id);
+        Assert.Equal(1, results[1].Id);
+    }
+
+    [Fact]
+    public void GetHighestProteinRecipes_MissingNutrition_ExcludesRecipe()
+    {
+        // Arrange
+        RecipeManager manager = new RecipeManager(new[]
+        {
+            new Recipe
+            {
+                Id = 1,
+                Title = "Recipe A",
+                Nutrition = new NutritionInfo
+                {
+                    ProteinG = 15
+                }
+            },
+
+            new Recipe
+            {
+                Id = 2,
+                Title = "Recipe B",
+            },
+
+            new Recipe
+            {
+                Id = 3,
+                Title = "Recipe C",
+                Nutrition = new NutritionInfo
+                {
+                    ProteinG = 10
+                }
+            }
+
+        });
+
+        // Act
+        var results = manager.GetHighestProteinRecipes(3);
+
+        // Assert
+        Assert.Equal(2, results.Count);
+        Assert.Equal(1, results[0].Id);
+        Assert.Equal(3, results[1].Id);
+    }
+
+    [Fact]
+    public void GetHighestProteinRecipes_ZeroCount_ReturnsEmptyList()
+    {
+        // Arrange  
+        RecipeManager manager = CreateManager();
+        // Act
+        var results = manager.GetHighestProteinRecipes(0);
+
+        // Assert
+        Assert.Empty(results);
+    }
+
+    [Fact]
+    public void GetHighestProteinRecipes_MissingProteinInformation_ExcludesRecipe()
+    {
+        // Arrange
+        RecipeManager manager = new RecipeManager(new[]
+        {
+            new Recipe
+            {
+                Id = 1,
+                Title = "Recipe A",
+                Nutrition = new NutritionInfo
+                {
+                    ProteinG = 15
+                }
+            },
+            new Recipe
+            {
+                Id = 2,
+                Title = "Recipe B",
+                Nutrition = new NutritionInfo
+                {
+                    CaloriesKcal = 200
+                }
+            }
+
+        });
+
+        // Act
+        var results = manager.GetHighestProteinRecipes(2);
+
+        // Assert
+        Assert.Single(results);
+        Assert.Equal(1, results[0].Id);
+        
+    }
+
+    [Fact]
+    public void GetHighestProteinRecipes_NegativeCount_ReturnsEmptyList()
+    {
+        // Arrange  
+        RecipeManager manager = CreateManager();
+        // Act
+        var results = manager.GetHighestProteinRecipes(-1);
+
+        // Assert
+        Assert.Empty(results);
+    }
+
+
     private static RecipeManager CreateManager()
     {
         return new RecipeManager(new[]

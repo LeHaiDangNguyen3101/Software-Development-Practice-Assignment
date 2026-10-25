@@ -223,9 +223,15 @@ public sealed class RecipeManager : IRecipeManager
         return results;
     }
 
-    public IReadOnlyList<Recipe> GetHighestProteinRecipes(int count) =>
-        throw new NotImplementedException("Part B: implement GetHighestProteinRecipes.");
-
+    public IReadOnlyList<Recipe> GetHighestProteinRecipes(int count)
+    {
+        var results = _recipes.Values
+            .Where(recipe => recipe.Nutrition != null && recipe.Nutrition.ProteinG != null)
+            .OrderByDescending(recipe => recipe.Nutrition!.ProteinG)
+            .Take(count)
+            .ToList();
+            return results;
+    }
     public bool AddSavedRecipe(int recipeId) =>
         throw new NotImplementedException("Part B: implement AddSavedRecipe.");
 
