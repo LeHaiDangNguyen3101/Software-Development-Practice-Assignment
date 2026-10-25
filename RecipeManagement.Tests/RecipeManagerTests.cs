@@ -467,6 +467,26 @@ public sealed class RecipeManagerTests
         Assert.Empty(result);
     }
 
+    [Fact]
+    public void IntegratedWorkflow_SearchSaveRemove_WorksTogether()
+    {
+        RecipeManager manager = CreateManager();
+        var results = manager.SearchByTitle("Recipe A");
+        int recipeId = results[0].Id;
+
+        bool added = manager.AddSavedRecipe(recipeId);
+        bool saved = manager.IsRecipeSaved(recipeId);
+
+        bool removed = manager.RemoveSavedRecipe(recipeId);
+        bool saved2 = manager.IsRecipeSaved(recipeId);
+
+        Assert.Single(results);
+        Assert.True(added);
+        Assert.True(saved);
+        Assert.True(removed);
+        Assert.False(saved2);
+    }
+
 
     private static RecipeManager CreateManager()
     {
