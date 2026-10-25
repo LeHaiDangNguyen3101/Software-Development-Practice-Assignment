@@ -37,4 +37,7 @@ Until you implement `RecipeManager`, menu options print a **Not implemented** me
 
 ## AI acknowledgement
 
-Include the required AI acknowledgement statement in your submission as described in the assignment specification.
+**AI tool:** ChatGPT (OpenAI)
+**Purpose:** Helped me understand C# collections, LINQ, HashSet<int>, xUnit testing, and debugging
+**How I used it:** Asked for explanations, examples, and feedback while developing Part A and Part B
+**My contribution:** I wrote, tested, and committed by my own implementation
